@@ -1,83 +1,42 @@
-# TODO-1: Create the screen. DONE.
-# TODO-2: Create and move the paddle. DONE.
-# TODO-3: Create another paddle. DONE.
-# TODO-4: Create the ball and make it move. DONE
-# TODO-5: Detect collision with top & bottom wall and bounce. Done*
-# TODO-6: Detect collision with paddle.
-# TODO-7: Detect when paddle misses.
-# TODO-8: Keep score.
-
-from turtle import Screen
-from paddles import Paddles
-from ball import Ball
-from scoreboard import Score
-import time
-
-screen = Screen()
-screen.setup(800, 600)
-screen.bgcolor("black")
-screen.title("Pong")
-screen.tracer(0) # Turns off animation. Requires manually updating screen. ie screen.update()
-
-# Score
-scoreboard = Score()
+from turtle import Turtle
 
 
-# Define initial positions for the paddles
-X_POS_P1 = 350
-Y_POS_P1 = 0
-X_POS_P2 = -350
-Y_POS_P2 = 0
-
-# Create two paddles with their respective positions
-r_paddle = Paddles(X_POS_P1, Y_POS_P1)  # Right paddle
-l_paddle = Paddles(X_POS_P2, Y_POS_P2)  # Left paddle
-# random_paddle = Paddles(0, 0) # FYI, We can create as many paddles as we want.
-
-# Create the ball and set it to the center of the screen.
-BALL_X_POS = 0
-BALL_Y_POS = 0
-
-ball = Ball(BALL_X_POS, BALL_Y_POS)
-
-# Screen
-screen.listen()
-screen.onkey(r_paddle.go_up, "Up")
-screen.onkey(r_paddle.go_down, "Down")
-screen.onkey(l_paddle.go_up, "w")
-screen.onkey(l_paddle.go_down, "s")
+FONT = ('Courier', 20, 'normal')
 
 
-x = 5
-game_is_on = True
-while game_is_on:
+class Score(Turtle):
 
-    # game_speed = 0.1 / x  # Smaller = faster
-    time.sleep(ball.move_speed)
-    screen.update()
-    ball.ball_move()  # Added to move the ball
+    def __init__(self):
+        super().__init__()
+        self.score = 0
+        self.color("white")
+        self.hideturtle()  # Hide the turtle object
+        self.penup()
 
-    # Detect collision with top & bottom wall
-    if ball.ycor() > 290 or ball.ycor() < -290:
-        ball.bounce_y()
+        # Set starting score at 0.
+        self.l_score = 0
+        self.r_score = 0
+        # self.goto(-100, 200)  # Set the position for the score
+        # self.write(self.l_score, align="center", font=("courier", 80, "normal"))
+        # self.goto(100, 200)  # Set the position for the score
+        # self.write(self.r_score, align="center", font=("courier", 80, "normal"))
+        self.update_score()
 
-    # Detect collision with paddle
-    if ball.distance(r_paddle) < 50 and ball.xcor() > 340 or ball.distance(l_paddle) < 50 and ball.xcor() < -340:
-        ball.bounce_x()
-        # x += 5
 
-    # Detect ball out of bounds for right player.
-    if ball.xcor() > 390:
-        # x = 5
-        ball.out_of_bounds()
-        scoreboard.increase_l_score()
-        scoreboard.update_score()
+    def update_score(self):
+        self.clear()
+        self.goto(-100, 200)  # Set the position for the left player's score
+        self.write(self.l_score, align="center", font=("courier", 80, "normal"))
+        self.goto(100, 200)  # Set the position for the right player's score
+        self.write(self.r_score, align="center", font=("courier", 80, "normal"))
 
-    # Detect ball out of bounds for left player.
-    if ball.xcor() < -390:
-        # x = 5
-        ball.out_of_bounds()
-        scoreboard.increase_r_score()
-        scoreboard.update_score()
 
-screen.exitonclick()
+    def increase_l_score(self):
+        self.l_score += 1
+
+    def increase_r_score(self):
+        self.r_score += 1
+
+
+    def clear_score(self):
+        self.clear()
