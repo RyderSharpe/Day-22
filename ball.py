@@ -5,6 +5,7 @@ WIDTH = 1
 HEIGHT = 1   # All turtles start out as 20 x 20, therefore width to be stretched by 5 to achieve 100 pixels
 BALL_X_SPEED = 3
 BALL_Y_SPEED = 1
+SPEED_INCREMENT = 0.9  # Speed increases by reducing the sleep time by this factor
 
 class Ball(Turtle):
 
@@ -18,7 +19,7 @@ class Ball(Turtle):
         self.goto(xpos, ypos)
         self.x_move = BALL_X_SPEED
         self.y_move = BALL_Y_SPEED
-        self.move_speed = 0.1
+        self.move_speed = 0.01 # Initialize ball speed when game starts
 
 
     def ball_move(self):
@@ -33,17 +34,14 @@ class Ball(Turtle):
 
     def bounce_x(self):
         self.x_move *= -1
-        self.move_speed *= 0.009
+        self.move_speed *= SPEED_INCREMENT  # Increase the ball's speed
 
     def out_of_bounds(self):
         # Ball resets to middle
         self.goto(0, 0)
         self.move_speed = 0.1
-        self.x_move *= -1
+        self.bounce_x()
 
     # def speed(self):
     #     self.x_move += 1
     #     self.y_move += 0.5
-
-
-
